@@ -1,1 +1,260 @@
 # KPC-Statistical-Predictive-Maintenance
+
+Project Overview
+
+This project combines statistical validation, predictive maintenance feature engineering, and classification modeling using an operational machine dataset.
+
+The analysis was completed in Python using a Jupyter Notebook. The main goal was to determine whether a measurable operational change occurred in machine performance, engineer useful health indicators from sensor and operating data, and build a simple predictive maintenance model that can identify machines requiring maintenance.
+
+The project also includes two communication briefs that translate the same analysis for two different audiences: an engineer and a CFO.
+
+Project Objectives
+
+The project addresses three technical objectives:
+
+Perform statistical validation using an appropriate hypothesis test and 95% confidence intervals.
+
+Engineer predictive maintenance health features that reveal changes in machine condition over time.
+
+Build and evaluate a classification model for predicting maintenance status.
+
+A separate communication deliverable explains the technical and business implications of the predictive maintenance approach.
+
+Dataset
+
+The analysis uses Mystery_Ops.csv, which contains 2,920 operational observations across 13 machines.
+
+The dataset includes variables such as:
+
+Machine identifier
+
+Date and time information
+
+Throughput
+
+Temperature
+
+Voltage
+
+Maintenance status
+
+Incident type
+
+The data was checked for structure, missing values, variable types, and machine-level operating patterns before statistical testing and modeling.
+
+Statistical Validation
+
+Hypothesis
+
+The statistical analysis focused on machine NBI-P03, which showed a clear shift in operational performance.
+
+Null hypothesis H0: There is no meaningful difference in average throughput between the earlier healthy operating period and the later maintenance-flagged period.
+
+Alternative hypothesis H1: Average throughput differs between the healthy and maintenance-flagged periods.
+
+Statistical Test
+
+Welch's independent-samples t-test was used because it does not require the two groups to have equal variances.
+
+Key Result
+
+The analysis found an estimated throughput reduction of approximately 409.8 barrels during the maintenance-flagged period.
+
+The 95% confidence interval for the difference was approximately 350.5 to 469.1 barrels.
+
+The p-value was approximately 1.84 x 10^-12.
+
+Because the p-value is far below 0.05, the null hypothesis was rejected.
+
+Interpretation
+
+The observed throughput reduction is statistically significant and unlikely to be explained by random sampling variation alone. This supports the conclusion that the machine experienced meaningful operational deterioration during the maintenance-flagged period.
+
+Predictive Maintenance Feature Engineering
+
+To capture changing machine condition over time, multiple rolling health features were engineered from operational and sensor data.
+
+The notebook includes features such as:
+
+Rolling mean
+
+Root Mean Square
+
+Rolling maximum-minimum range
+
+Lagged temperature behavior
+
+Lagged voltage behavior
+
+Lagged throughput behavior
+
+Lagged rolling calculations were used so that each prediction relies only on information available before the prediction point. This reduces the risk of time leakage.
+
+The engineered features were visualized against time to show how machine condition changes as maintenance risk increases.
+
+Target Variable
+
+A binary target was created:
+
+0 = Healthy
+
+1 = Needs Maintenance
+
+This converts the predictive maintenance problem into a binary classification task.
+
+Predictive Model
+
+A Logistic Regression model was used because it is simple, interpretable, and appropriate for a binary target.
+
+A chronological train-test split was used instead of a random split. This better represents a real operational setting in which historical observations are used to predict future machine condition.
+
+Model Performance
+
+On the chronological holdout set, the model produced:
+
+Metric
+
+Result
+
+Accuracy
+
+99.44%
+
+Sensitivity / Recall
+
+98.05%
+
+Specificity
+
+99.82%
+
+Precision
+
+99.34%
+
+F1 Score
+
+98.69%
+
+False Positive Rate
+
+0.18%
+
+Confusion Matrix
+
+
+
+Predicted Healthy
+
+Predicted Maintenance
+
+Actual Healthy
+
+557
+
+1
+
+Actual Maintenance
+
+3
+
+151
+
+The model correctly identified most maintenance cases while producing very few false alarms.
+
+Business Interpretation
+
+The model demonstrates how operational and sensor history can be converted into an early-warning maintenance signal.
+
+High sensitivity is important because missed maintenance cases may lead to equipment deterioration, lost production, or unplanned downtime.
+
+A low false-positive rate is also important because unnecessary maintenance interventions consume labor, spare parts, and production time.
+
+The model therefore shows strong proof-of-concept value for prioritizing inspections and maintenance activity.
+
+However, the performance should not automatically be treated as production-ready. The model should be validated on additional machines, operating periods, and real failure events before deployment.
+
+Communication Briefs
+
+The project includes a separate PDF containing two one-page communication briefs.
+
+Brief A: Engineer
+
+The technical brief explains:
+
+Sensor and feature logic
+
+Sensitivity
+
+False positives
+
+Classification performance
+
+Maintenance decision implications
+
+Brief B: CFO
+
+The executive brief explains:
+
+Potential reduction in unplanned downtime
+
+Maintenance risk reduction
+
+Financial value
+
+Illustrative cost savings
+
+Illustrative ROI and payback
+
+Any financial assumptions used in the CFO brief are explicitly presented as scenario estimates because the supplied operational dataset does not contain actual downtime costs, maintenance costs, or implementation costs.
+
+Repository Structure
+
+week6-predictive-maintenance/
+|
+|-- Mystery_Ops.csv
+|-- week6_stats_and_pdm.ipynb
+|-- Week6_Communication_Briefs_YourName.pdf
+|-- README.md
+
+Python Libraries
+
+The notebook uses:
+
+pandas
+numpy
+matplotlib
+scipy
+scikit-learn
+
+How to Run the Project
+
+Clone or download the repository.
+
+Place Mystery_Ops.csv in the same folder as the notebook.
+
+Install the required Python libraries.
+
+Open week6_stats_and_pdm.ipynb in Jupyter Notebook, JupyterLab, or VS Code.
+
+Run the cells from top to bottom.
+
+Example installation command:
+
+pip install pandas numpy matplotlib scipy scikit-learn jupyter
+
+Key Takeaways
+
+This project demonstrates how statistical analysis and predictive modeling can support maintenance decisions.
+
+The statistical test confirmed a meaningful throughput deterioration in one machine.
+
+Rolling operational and sensor features captured machine-condition patterns over time.
+
+The Logistic Regression model achieved strong holdout performance and demonstrated how maintenance cases can be identified with high sensitivity and very few false positives.
+
+The project also demonstrates the importance of communicating the same analysis differently depending on the audience. Engineers need information about sensor logic and detection performance, while executives need a clear explanation of cost exposure, risk reduction, and business value.
+
+Reflection
+
+Switching between the engineering and executive perspectives required more than simply shortening the technical explanation. The engineering brief needed precise discussion of sensor behavior, sensitivity, false positives, and model logic. The CFO brief required translating the same findings into operational risk, financial impact, and decision value without technical jargon. The exercise showed that effective data analysis includes both building a reliable model and communicating its meaning appropriately to different stakeholders.
